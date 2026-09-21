@@ -61,6 +61,72 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
   .wrap{padding:32px 14px 55px}.hero{margin-bottom:20px}.searchbox{padding:14px;border-radius:19px}
   .actions{grid-template-columns:1fr 1fr}
 }
+
+.footer{
+  margin:38px 4px 0;padding:24px 0 4px;border-top:1px solid #dfe5e3;
+  display:flex;align-items:center;justify-content:space-between;gap:18px
+}
+.footer-copy{min-width:0}
+.footer-kicker{font-size:10px;font-weight:900;letter-spacing:.14em;color:#9aa4ad;margin-bottom:5px}
+.footer-title{font-size:13px;font-weight:800;color:#5e6a74;line-height:1.55}
+.xlink{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  color:#fff;background:#18222d;border-radius:999px;padding:10px 14px 10px 11px;
+  font-size:12px;font-weight:800;transition:.15s transform,.15s opacity
+}
+.xlink:hover{opacity:.88;transform:translateY(-1px)}
+.xmark{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#111;font-size:13px;font-weight:900}
+@media(max-width:520px){
+  .footer{align-items:flex-start;flex-direction:column}
+  .xlink{width:100%;justify-content:center}
+}
+
+
+.data-update{
+  display:inline-flex;align-items:center;gap:7px;margin-top:9px;
+  font-size:10px;font-weight:900;letter-spacing:.11em;color:#7d898f
+}
+.data-update::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:#0c7658;
+  box-shadow:0 0 0 3px #e3f1ec
+}
+
+
+.feedback{
+  margin-top:10px;padding-top:11px;border-top:1px dashed #e4e9e7
+}
+.feedback-label{font-size:10px;font-weight:800;color:#98a1a8;margin-bottom:7px}
+.feedback-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.feedback-buttons a{
+  text-decoration:none;color:#66727b;background:#f5f7f7;border:1px solid #e7ebea;
+  padding:7px 9px;border-radius:999px;font-size:10px;font-weight:800
+}
+.feedback-buttons a:hover{background:#edf3f1;color:#0c7658}
+.general-report{
+  margin-top:16px;display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+  font-size:11px;font-weight:800;color:#64717a
+}
+.general-report:hover{color:#0c7658}
+
+
+.alt-search{margin-top:13px;padding-top:13px;border-top:1px solid #edf0ef}
+.alt-label{font-size:11px;font-weight:800;color:#89949b;margin:0 2px 8px}
+.searchrow{display:flex;gap:8px}
+.searchinput{
+  flex:1;min-width:0;border:1px solid #dfe5e3;background:#fff;border-radius:13px;
+  padding:13px 14px;font:inherit;font-size:14px;color:#18222d;outline:none
+}
+.searchinput:focus{border-color:#91bcae;box-shadow:0 0 0 3px #e8f3ef}
+.searchbtn{
+  width:auto;min-width:72px;padding:12px 15px;border-radius:13px;
+  box-shadow:none;font-size:13px
+}
+.safety{margin:10px 2px 0;font-size:10px;color:#a0a8ae;line-height:1.5}
+.empty{
+  background:#fff;border:1px solid #e6eaee;border-radius:16px;padding:20px;
+  text-align:center;color:#71808e;font-size:13px;line-height:1.7
+}
+
 </style>
 </head>
 <body>
@@ -71,14 +137,36 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
     <p class="sub">現在地から、QUOカードで支払えるガソリンスタンドを近い順に表示します。</p>
   </header>
   <section class="searchbox">
-    <button id="locate">現在地から探す</button>
+    <button id="locate">📍 現在地から探す</button>
     <div id="status" class="status">位置情報は検索時の距離計算にのみ使用します。</div>
+    <div class="alt-search">
+      <div class="alt-label">場所や店名から探す</div>
+      <div class="searchrow">
+        <input id="keyword" class="searchinput" type="search" inputmode="search"
+          placeholder="例：札幌 / ENEOS / 北1条" autocomplete="off">
+        <button id="search" class="searchbtn">検索</button>
+      </div>
+      <div class="safety">運転中の操作はせず、安全な場所に停車してご利用ください。</div>
+    </div>
   </section>
   <section id="list" class="list"></section>
   <div class="note">
     表示距離は現在地から店舗までの直線距離です。実際の走行距離・所要時間とは異なります。
     店舗の閉店やQUOカード取扱変更等が反映されていない場合があります。ご利用前に店舗へご確認ください。
   </div>
+
+  <footer class="footer">
+    <div class="footer-copy">
+      <div class="footer-kicker">MADE FOR YUTAI PEOPLE</div>
+      <div class="footer-title">優待を、もう少し便利に。<br>更新・優待ネタは X で。</div>
+      <div class="data-update">DATA UPDATE 2026.09.21</div>
+      <a class="general-report" target="_blank" rel="noopener" href="#" onclick="this.href=newStationUrl()">＋ 掲載されていないQUO対応GSを教える</a>
+    </div>
+    <a class="xlink" href="https://x.com/yutai_samurai" target="_blank" rel="noopener">
+      <span class="xmark">𝕏</span><span>@yutai_samurai</span>
+    </a>
+  </footer>
+
 </main>
 <script>
 const btn=document.getElementById('locate'), statusEl=document.getElementById('status'), list=document.getElementById('list');
@@ -101,7 +189,62 @@ function mapsPoint(name,lat,lng){
   const query = encodeURIComponent(`${name} ${lat},${lng}`);
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
+function feedbackUrl(type,name){
+  const messages={
+    closed:`@yutai_samurai 優待QUOナビ 情報提供\n\n【閉店してる】\n${name}\n\n#優待QUOナビ`,
+    noquo:`@yutai_samurai 優待QUOナビ 情報提供\n\n【QUO使えなかった】\n${name}\n\n#優待QUOナビ`,
+    works:`@yutai_samurai 優待QUOナビ 情報提供\n\n【QUO使えた／情報更新】\n${name}\n\n#優待QUOナビ`
+  };
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(messages[type])}`;
+}
+function newStationUrl(){
+  const text=`@yutai_samurai 優待QUOナビ 情報提供\n\n【ここでもQUO使えた】\n店舗名：\n場所：\n\n#優待QUOナビ`;
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+
+function renderKeywordResults(items, label){
+  if(!items.length){
+    list.innerHTML=`<div class="empty">「${esc(label)}」に一致する店舗が見つかりませんでした。<br>市区町村名や店舗名の一部でも試してみてください。</div>`;
+    statusEl.textContent='検索結果 0件';
+    return;
+  }
+  statusEl.textContent=`「${label}」の検索結果 ${items.length}件`;
+  list.innerHTML=items.slice(0,30).map((s,i)=>`
+    <article class="card">
+      <div class="topline"><div class="rank">RESULT ${i+1}</div></div>
+      <div class="name">${esc(s.name)}</div>${s.address?`<div class="meta">${esc(s.address)}</div>`:""}
+      <div class="actions">
+        <a class="route" target="_blank" rel="noopener" href="${mapsRoute(s.lat,s.lng)}">🚗 経路を見る</a>
+        <a class="map" target="_blank" rel="noopener" href="${mapsPoint(s.name,s.lat,s.lng)}">地図で確認</a>
+      </div>
+      <div class="feedback">
+        <div class="feedback-label">情報が違っていたら教えてください</div>
+        <div class="feedback-buttons">
+          <a target="_blank" rel="noopener" href="${feedbackUrl('closed',s.name)}">閉店してる</a>
+          <a target="_blank" rel="noopener" href="${feedbackUrl('noquo',s.name)}">QUO使えなかった</a>
+          <a target="_blank" rel="noopener" href="${feedbackUrl('works',s.name)}">情報を送る</a>
+        </div>
+      </div>
+    </article>`).join('');
+}
+function keywordSearch(){
+  const input=document.getElementById('keyword');
+  const q=input.value.trim();
+  if(!q){input.focus();return}
+  const norm=s=>String(s).normalize('NFKC').toLowerCase().replace(/\s+/g,'');
+  const nq=norm(q);
+  const found=stations.filter(s=>{
+    const hay=[s.name,s.prefecture,s.city,s.town,s.address].filter(Boolean).join(' ');
+    return norm(hay).includes(nq);
+  });
+  renderKeywordResults(found,q);
+}
+document.getElementById('search').onclick=keywordSearch;
+document.getElementById('keyword').addEventListener('keydown',e=>{
+  if(e.key==='Enter') keywordSearch();
+});
 
 btn.onclick=()=>{
   if(!navigator.geolocation){statusEl.textContent='このブラウザは位置情報取得に対応していません。';return}
@@ -114,10 +257,18 @@ btn.onclick=()=>{
     list.innerHTML=nearest.map((s,i)=>`
       <article class="card">
         <div class="topline"><div class="rank">NEAREST ${i+1}</div><div class="distance">${fmt(s.km)}</div></div>
-        <div class="name">${esc(s.name)}</div>
+        <div class="name">${esc(s.name)}</div>${s.address?`<div class="meta">${esc(s.address)}</div>`:""}
         <div class="actions">
           <a class="route" target="_blank" rel="noopener" href="${mapsRoute(s.lat,s.lng)}">🚗 経路を見る</a>
           <a class="map" target="_blank" rel="noopener" href="${mapsPoint(s.name,s.lat,s.lng)}">地図で確認</a>
+        </div>
+        <div class="feedback">
+          <div class="feedback-label">情報が違っていたら教えてください</div>
+          <div class="feedback-buttons">
+            <a target="_blank" rel="noopener" href="${feedbackUrl('closed',s.name)}">閉店してる</a>
+            <a target="_blank" rel="noopener" href="${feedbackUrl('noquo',s.name)}">QUO使えなかった</a>
+            <a target="_blank" rel="noopener" href="${feedbackUrl('works',s.name)}">情報を送る</a>
+          </div>
         </div>
       </article>`).join('');
     btn.disabled=false;
