@@ -51,7 +51,13 @@ def reverse_geocode(lat, lng, muni):
     url = ("https://mreversegeocoder.gsi.go.jp/reverse-geocoder/"
            f"LonLatToAddress?lat={urllib.parse.quote(str(lat))}&lon={urllib.parse.quote(str(lng))}")
     data = json.loads(get_text(url)).get("results") or {}
-    code = str(data.get("muniCd") or "")
+    # GSI may return muniCd as a number. Municipality codes in muni.js are
+    # five digits, so prefectures 01-09 lose the leading zero unless restored.
+    # e.g. Sapporo 011xx -> JSON number 11xx -> must become "011xx".
+    raw_code = data.get("muniCd")
+    code = str(raw_code or "").strip()
+    if code.isdigit():
+        code = code.zfill(5)
     town = str(data.get("lv01Nm") or "").strip()
     m = muni.get(code, {})
     pref = m.get("prefecture","")
