@@ -21,7 +21,8 @@ def municipality_table():
     for code, value in re.findall(r'MUNI_ARRAY\["(\d+)"\]\s*=\s*[\'"]([^\'"]+)[\'"]', txt):
         p = value.split(",")
         if len(p) >= 4:
-            out[code] = {"prefecture": p[1], "city": p[3]}
+            norm_code = str(int(code)) if code.isdigit() else code
+            out[norm_code] = {"prefecture": p[1], "city": p[3].replace("\u3000", "")}
     return out
 
 def parse_kml(path):
@@ -51,17 +52,18 @@ def reverse_geocode(lat, lng, muni):
     url = ("https://mreversegeocoder.gsi.go.jp/reverse-geocoder/"
            f"LonLatToAddress?lat={urllib.parse.quote(str(lat))}&lon={urllib.parse.quote(str(lng))}")
     data = json.loads(get_text(url)).get("results") or {}
-    # GSI may return muniCd as a number. Municipality codes in muni.js are
-    # five digits, so prefectures 01-09 lose the leading zero unless restored.
-    # e.g. Sapporo 011xx -> JSON number 11xx -> must become "011xx".
+    # API can return "01107", while muni.js uses "1107".
+    # Normalize both sides by removing leading zeroes.
     raw_code = data.get("muniCd")
     code = str(raw_code or "").strip()
     if code.isdigit():
-        code = code.zfill(5)
+        code = str(int(code))
     town = str(data.get("lv01Nm") or "").strip()
     m = muni.get(code, {})
     pref = m.get("prefecture","")
     city = m.get("city","")
+    if code and (not pref or not city):
+        raise ValueError(f"municipality code {raw_code!r} (normalized {code!r}) not found in muni.js")
     return {
         "prefecture": pref,
         "city": city,
