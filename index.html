@@ -67,6 +67,10 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
   display:flex;align-items:center;justify-content:space-between;gap:18px
 }
 .footer-copy{min-width:0}
+.privacy-note{font-size:11px;font-weight:700;color:#66727b;line-height:1.7;max-width:540px}
+.privacy-note strong{color:#43515b}
+.privacy-note a{color:#0c7658;text-decoration:none;font-weight:900}
+.privacy-note a:hover{text-decoration:underline}
 .footer-kicker{font-size:10px;font-weight:900;letter-spacing:.14em;color:#9aa4ad;margin-bottom:5px}
 .footer-title{font-size:13px;font-weight:800;color:#5e6a74;line-height:1.55}
 .xlink{
@@ -138,7 +142,7 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
   </header>
   <section class="searchbox">
     <button id="locate">📍 現在地から探す</button>
-    <div id="status" class="status">位置情報は検索時の距離計算にのみ使用します。</div>
+    <div id="status" class="status">位置情報はブラウザ内での距離計算にのみ使用し、当サイトでは収集・保存しません。</div>
     <div class="alt-search">
       <div class="alt-label">場所や店名から探す</div>
       <div class="searchrow">
@@ -157,8 +161,10 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
 
   <footer class="footer">
     <div class="footer-copy">
-      <div class="footer-kicker">MADE FOR YUTAI PEOPLE</div>
-      <div class="footer-title">優待を、もう少し便利に。<br>更新・優待ネタは X で。</div>
+      <div class="footer-kicker">PRIVACY</div>
+      <div class="privacy-note">
+        <strong>現在地はブラウザ内でのみ利用します。</strong><br>
+      最寄りのGSを探すための距離計算にのみ使用し、当サイトでは位置情報を収集・保存しません。Xアカウントと位置情報を紐付ける仕組みもありません。（github運用です）</div>
       <div class="data-update">DATA UPDATE 2026.09.21</div>
       <a class="general-report" target="_blank" rel="noopener" href="#" onclick="this.href=newStationUrl()">＋ 掲載されていないQUO対応GSを教える</a>
     </div>
