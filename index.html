@@ -101,11 +101,15 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
 }
 .feedback-label{font-size:10px;font-weight:800;color:#98a1a8;margin-bottom:7px}
 .feedback-buttons{display:flex;gap:6px;flex-wrap:wrap}
-.feedback-buttons a{
-  text-decoration:none;color:#66727b;background:#f5f7f7;border:1px solid #e7ebea;
+.feedback-buttons button{
+  width:auto;box-shadow:none;color:#66727b;background:#f5f7f7;border:1px solid #e7ebea;
   padding:7px 9px;border-radius:999px;font-size:10px;font-weight:800
 }
-.feedback-buttons a:hover{background:#edf3f1;color:#0c7658}
+.feedback-buttons button:hover{background:#edf3f1;color:#0c7658}
+.feedback-buttons button:disabled{opacity:.55;cursor:default}
+.report-summary{margin-top:8px;font-size:10px;color:#87929a;line-height:1.6}
+.report-summary strong{color:#0c7658}
+.report-message{margin-top:6px;font-size:10px;font-weight:800;color:#0c7658;min-height:16px}
 .general-report{
   margin-top:16px;display:inline-flex;align-items:center;gap:7px;text-decoration:none;
   font-size:11px;font-weight:800;color:#64717a
@@ -195,13 +199,73 @@ function mapsPoint(name,lat,lng){
   const query = encodeURIComponent(`${name} ${lat},${lng}`);
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
-function feedbackUrl(type,name){
-  const messages={
-    closed:`@yutai_samurai 優待QUOナビ 情報提供\n\n【閉店してる】\n${name}\n\n#優待QUOナビ`,
-    noquo:`@yutai_samurai 優待QUOナビ 情報提供\n\n【QUO使えなかった】\n${name}\n\n#優待QUOナビ`,
-    works:`@yutai_samurai 優待QUOナビ 情報提供\n\n【QUO使えた／情報更新】\n${name}\n\n#優待QUOナビ`
-  };
-  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(messages[type])}`;
+const FEEDBACK_API='https://yutai-quo-feedback.yutaisamurai.workers.dev';
+
+function stationId(s){
+  return `${Number(s.lat).toFixed(6)},${Number(s.lng).toFixed(6)}`;
+}
+async function loadReportSummary(s){
+  const id=stationId(s);
+  const el=document.querySelector(`[data-report-summary="${CSS.escape(id)}"]`);
+  if(!el)return;
+  try{
+    const r=await fetch(`${FEEDBACK_API}/reports?station_id=${encodeURIComponent(id)}`);
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    const total=(d.works||0)+(d.noquo||0)+(d.closed||0);
+    el.innerHTML=total
+      ? `みんなの報告：<strong>QUO使えた ${d.works||0}</strong> ／ 使えなかった ${d.noquo||0} ／ 閉店 ${d.closed||0}`
+      : 'みんなの報告：まだありません';
+  }catch(e){
+    el.textContent='報告状況を取得できませんでした';
+  }
+}
+async function sendReport(type,s,button){
+  const id=stationId(s);
+  const card=button.closest('.card');
+  const msg=card.querySelector('.report-message');
+  const buttons=card.querySelectorAll('.feedback-buttons button');
+  buttons.forEach(b=>b.disabled=true);
+  msg.textContent='送信中…';
+  try{
+    const r=await fetch(`${FEEDBACK_API}/report`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({station_id:id,report_type:type})
+    });
+    if(!r.ok)throw new Error();
+    msg.textContent='情報提供ありがとうございます！';
+    await loadReportSummary(s);
+  }catch(e){
+    msg.textContent='送信できませんでした。時間をおいて再度お試しください。';
+  }finally{
+    buttons.forEach(b=>b.disabled=false);
+  }
+}
+function feedbackHtml(s){
+  const id=esc(stationId(s));
+  const data=encodeURIComponent(JSON.stringify({name:s.name,lat:s.lat,lng:s.lng}));
+  return `
+    <div class="feedback">
+      <div class="feedback-label">この店舗の情報を教えてください</div>
+      <div class="feedback-buttons" data-station="${data}">
+        <button type="button" data-report="works">QUO使えた</button>
+        <button type="button" data-report="noquo">QUO使えなかった</button>
+        <button type="button" data-report="closed">閉店してる</button>
+      </div>
+      <div class="report-summary" data-report-summary="${id}">報告状況を読み込み中…</div>
+      <div class="report-message"></div>
+    </div>`;
+}
+function activateReports(items){
+  document.querySelectorAll('.feedback-buttons[data-station]').forEach(box=>{
+    let s;
+    try{s=JSON.parse(decodeURIComponent(box.dataset.station))}catch(e){return}
+    box.querySelectorAll('button[data-report]').forEach(b=>{
+      b.onclick=()=>sendReport(b.dataset.report,s,b);
+    });
+  });
+  items.forEach(loadReportSummary);
 }
 function newStationUrl(){
   const text=`@yutai_samurai 優待QUOナビ 情報提供\n\n【ここでもQUO使えた】\n店舗名：\n場所：\n\n#優待QUOナビ`;
@@ -225,15 +289,9 @@ function renderKeywordResults(items, label){
         <a class="route" target="_blank" rel="noopener" href="${mapsRoute(s.lat,s.lng)}">🚗 経路を見る</a>
         <a class="map" target="_blank" rel="noopener" href="${mapsPoint(s.name,s.lat,s.lng)}">地図で確認</a>
       </div>
-      <div class="feedback">
-        <div class="feedback-label">情報が違っていたら教えてください</div>
-        <div class="feedback-buttons">
-          <a target="_blank" rel="noopener" href="${feedbackUrl('closed',s.name)}">閉店してる</a>
-          <a target="_blank" rel="noopener" href="${feedbackUrl('noquo',s.name)}">QUO使えなかった</a>
-          <a target="_blank" rel="noopener" href="${feedbackUrl('works',s.name)}">情報を送る</a>
-        </div>
-      </div>
+      ${feedbackHtml(s)}
     </article>`).join('');
+  activateReports(items.slice(0,30));
 }
 function keywordSearch(){
   const input=document.getElementById('keyword');
@@ -277,6 +335,7 @@ btn.onclick=()=>{
           </div>
         </div>
       </article>`).join('');
+    activateReports(nearest);
     btn.disabled=false;
   },err=>{
     const msg={1:'位置情報の利用が許可されませんでした。ブラウザの設定をご確認ください。',2:'現在地を取得できませんでした。',3:'位置情報の取得がタイムアウトしました。'}[err.code]||'位置情報を取得できませんでした。';
