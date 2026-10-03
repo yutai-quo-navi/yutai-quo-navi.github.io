@@ -220,11 +220,29 @@ async function loadReportSummary(s){
     el.textContent='報告状況を取得できませんでした';
   }
 }
+function reportLockKey(s){ return 'quo_report_lock_' + stationId(s); }
+function reportLocked(s){
+  try{
+    const t=Number(localStorage.getItem(reportLockKey(s))||0);
+    return t>0 && Date.now()-t < 4*60*60*1000;
+  }catch(e){ return false; }
+}
+function setReportLock(s){
+  try{ localStorage.setItem(reportLockKey(s),String(Date.now())); }catch(e){}
+}
+function applyReportLock(s,card){
+  if(!reportLocked(s)) return false;
+  card.querySelectorAll('.feedback-buttons button').forEach(b=>b.disabled=true);
+  const msg=card.querySelector('.report-message');
+  if(msg) msg.textContent='この店舗は報告済みです（4時間後に再度報告できます）';
+  return true;
+}
 async function sendReport(type,s,button){
   const id=stationId(s);
   const card=button.closest('.card');
   const msg=card.querySelector('.report-message');
   const buttons=card.querySelectorAll('.feedback-buttons button');
+  if(applyReportLock(s,card)) return;
   buttons.forEach(b=>b.disabled=true);
   msg.textContent='送信中…';
   try{
@@ -234,12 +252,13 @@ async function sendReport(type,s,button){
       body:JSON.stringify({station_id:id,report_type:type})
     });
     if(!r.ok)throw new Error();
-    msg.textContent='情報提供ありがとうございます！';
+    setReportLock(s);
+    msg.textContent='情報提供ありがとうございます！ この店舗は4時間再報告できません。';
     await loadReportSummary(s);
   }catch(e){
     msg.textContent='送信できませんでした。時間をおいて再度お試しください。';
   }finally{
-    buttons.forEach(b=>b.disabled=false);
+    if(!reportLocked(s)) buttons.forEach(b=>b.disabled=false);
   }
 }
 function feedbackHtml(s){
@@ -264,6 +283,8 @@ function activateReports(items){
     box.querySelectorAll('button[data-report]').forEach(b=>{
       b.onclick=()=>sendReport(b.dataset.report,s,b);
     });
+    const card=box.closest('.card');
+    if(card) applyReportLock(s,card);
   });
   items.forEach(loadReportSummary);
 }
