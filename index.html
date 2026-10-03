@@ -326,14 +326,7 @@ btn.onclick=()=>{
           <a class="route" target="_blank" rel="noopener" href="${mapsRoute(s.lat,s.lng)}">🚗 経路を見る</a>
           <a class="map" target="_blank" rel="noopener" href="${mapsPoint(s.name,s.lat,s.lng)}">地図で確認</a>
         </div>
-        <div class="feedback">
-          <div class="feedback-label">情報が違っていたら教えてください</div>
-          <div class="feedback-buttons">
-            <a target="_blank" rel="noopener" href="${feedbackUrl('closed',s.name)}">閉店してる</a>
-            <a target="_blank" rel="noopener" href="${feedbackUrl('noquo',s.name)}">QUO使えなかった</a>
-            <a target="_blank" rel="noopener" href="${feedbackUrl('works',s.name)}">情報を送る</a>
-          </div>
-        </div>
+        ${feedbackHtml(s)}
       </article>`).join('');
     activateReports(nearest);
     btn.disabled=false;
