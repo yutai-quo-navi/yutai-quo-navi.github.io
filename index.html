@@ -27,7 +27,7 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:720px;margin:0 auto;padding:54px 18px 72px}
+.wrap{max-width:720px;margin:0 auto;padding:24px 18px 40px}
 .hero{margin-bottom:28px}
 .brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
 .logo{
@@ -68,7 +68,7 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
 .note{margin:25px 4px 0;padding-top:17px;border-top:1px solid #dfe5e3;font-size:11px;line-height:1.8;color:#89949e}
 .count{color:var(--green);font-weight:800}
 @media(max-width:520px){
-  .wrap{padding:32px 14px 55px}.hero{margin-bottom:20px}.searchbox{padding:14px;border-radius:19px}
+  .wrap{padding:20px 14px 32px}.hero{margin-bottom:20px}.searchbox{padding:14px;border-radius:19px}
   .actions{grid-template-columns:1fr 1fr}
 }
 
@@ -154,21 +154,28 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
 .seo-info a{color:#0c7658;font-weight:800;text-decoration:none}
 .seo-info a:hover{text-decoration:underline}
 </style>
+<link rel="stylesheet" href="./assets/brand.css?v=20261005-brand1">
 </head>
-<body>
+<body class="gs-tool">
+<header class="site-header">
+    <div class="site-brand"><div class="site-logo" aria-hidden="true">Q</div><p class="site-brand-name"><span>株主優待券店舗と</span><span>QUOガソリン給油検索</span></p></div>
+    <nav class="tool-nav" aria-label="検索ツールの切り替え">
+      <a href="/yutai-map/" >優待券のお店</a>
+      <a href="/" aria-current="page">QUOガソリン給油</a>
+    </nav>
+  </header>
 <main class="wrap">
   <header class="hero">
-    <div class="brand"><div class="logo">Q</div><div class="brandtext">YUTAI QUO NAVI</div></div>
     <h1>近くのQUOカード対応GSを探す。</h1>
     <p class="sub">現在地から、QUOカードで支払えるガソリンスタンドを近い順に表示します。</p>
   </header>
   <section class="searchbox">
-    <button id="locate">📍 現在地から探す</button>
+    <button id="locate">現在地から探す</button>
     <div id="status" class="status">位置情報はブラウザ内での距離計算にのみ使用し、当サイトでは収集・保存しません。</div>
     <div class="alt-search">
       <div class="alt-label">場所や店名から探す</div>
       <div class="searchrow">
-        <input id="keyword" class="searchinput" type="search" inputmode="search"
+        <input id="keyword" aria-label="場所やガソリンスタンド名" class="searchinput" type="search" inputmode="search"
           placeholder="例：札幌 / ENEOS / 北1条" autocomplete="off">
         <button id="search" class="searchbtn">検索</button>
       </div>
@@ -187,21 +194,20 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
     <p><a href="./area/">都道府県別のQUOカード対応ガソリンスタンド一覧</a> ／ <a href="./brand/eneos/">ENEOS（エネオス）の対応店舗一覧</a> ／ <a href="./brand/ja-ss/">JA-SSの対応店舗一覧</a></p>
   </section>
 
-  <footer class="footer">
+
+
+</main>
+  <footer class="footer site-footer"><div class="site-footer-brand">株主優待券店舗とQUOガソリン給油検索</div>
     <div class="footer-copy">
       <div class="footer-kicker">PRIVACY</div>
       <div class="privacy-note">
-        <strong>現在地はブラウザ内でのみ利用します。</strong><br>
-      最寄りのGSを探すための距離計算にのみ使用し、当サイトでは位置情報を収集・保存しません。Xアカウントと位置情報を紐付ける仕組みもありません。（github運用です）</div>
+        <strong>運営者は現在地を収集・保存しません。</strong><br>
+      現在地はブラウザ内で最寄りのGSとの距離計算にのみ利用し、検索のために外部APIへ送信しません。位置座標は端末にも永続保存しません。ログイン・X連携はありません。</div>
       <div class="data-update">DATA UPDATE 2026.10.05</div>
       <a class="general-report" target="_blank" rel="noopener" href="#" onclick="this.href=newStationUrl()">＋ 掲載されていないQUO対応GSを教える</a>
     </div>
-    <a class="xlink" href="https://x.com/yutai_samurai" target="_blank" rel="noopener">
-      <span class="xmark">𝕏</span><span>@yutai_samurai</span>
-    </a>
+<a class="creator-link" href="https://x.com/yutai_samurai" target="_blank" rel="noopener noreferrer" aria-label="運営者 yutai_samurai のX"><img src="./assets/yutai-samurai.png" width="17" height="17" alt="" loading="lazy"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.4L5.5 22H2.3l7.3-8.5L.8 2h6.5l4.4 6.7L18.9 2Zm-1.1 18h1.7L6.3 3.9H4.5L17.8 20Z"/></svg><span>@yutai_samurai</span></a>
   </footer>
-
-</main>
 <script>
 const btn=document.getElementById('locate'), statusEl=document.getElementById('status'), list=document.getElementById('list');
 let stations=[];

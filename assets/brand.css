@@ -1,0 +1,23 @@
+/* Shared identity for the two shareholder benefit search tools. */
+:root{--brand-accent:#0c7658;--brand-soft:#eaf5f1;--brand-line:#dfe5e3;--brand-muted:#66727b}
+body.food-tool{--brand-accent:#ba480d;--brand-soft:#ffe8bd;--brand-line:#ebdcc6;--brand-muted:#796a59}
+.site-header{width:100%;max-width:720px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top)) 18px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 10px}
+.site-brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.site-logo{width:40px;height:40px;flex:none;border-radius:13px;display:grid;place-items:center;color:#fff;background:var(--brand-accent);font-size:20px;font-weight:900;box-shadow:0 5px 16px #36291d10}
+.site-brand-name{margin:0;color:var(--brand-accent);font-size:14px;line-height:1.6;font-weight:800;letter-spacing:.015em}
+.site-brand-name span{display:inline}
+.tool-nav{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:100%;padding:5px;border:1px solid var(--brand-line);border-radius:17px;background:#ffffffa8}
+.tool-nav a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:8px 6px;border-radius:12px;font-size:13px;font-weight:700;text-decoration:none;color:var(--brand-muted);line-height:1.4}
+.tool-nav a[aria-current="page"]{color:#fff;background:var(--brand-accent);box-shadow:0 3px 10px #36291d12}
+.tool-nav a:hover{outline:2px solid var(--brand-line);outline-offset:-2px}
+.site-footer{width:100%;max-width:720px;margin:28px auto 0;padding:22px 18px calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--brand-line);color:var(--brand-muted);font-size:11px;line-height:1.8;display:block;text-align:left}
+.site-footer p{margin:8px 0}
+.site-footer-brand{font-size:11px;font-weight:700;letter-spacing:0}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:8px;align-items:center}
+.footer-links a,.footer-links button{font:inherit;color:var(--brand-muted);text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;box-shadow:none;width:auto;cursor:pointer}
+.site-footer .creator-link{display:inline-flex;align-items:center;gap:5px;color:var(--brand-muted);font-size:10px;font-weight:500;text-decoration:none;background:none;padding:0;border-radius:0;line-height:1.6;margin-top:12px;width:auto;box-shadow:none}
+.creator-link img{display:block;width:17px;height:17px;border-radius:50%;object-fit:cover}
+.creator-link svg{display:block;flex:none}
+.creator-link:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--brand-accent);outline-offset:3px}
+@media(max-width:520px){.site-header{padding-left:14px;padding-right:14px;gap:14px 6px}.site-brand-name{font-size:11px}.site-brand-name span{display:block}.site-logo{width:34px;height:34px;border-radius:11px;font-size:18px}.tool-nav a{font-size:12px}.site-footer{padding-left:14px;padding-right:14px}}
