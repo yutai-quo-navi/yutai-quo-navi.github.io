@@ -93,32 +93,42 @@ def maps_url(s):
 
 def page_template(title, description, canonical, h1, intro, body, breadcrumb=""):
     today = datetime.now(JST).strftime("%Y.%m.%d")
+    # Reuse the homepage identity so automated DB updates preserve common CI.
+    homepage = INDEX.read_text(encoding="utf-8")
+    header = re.search(r'<header class="site-header">.*?</header>', homepage, re.S).group(0)
+    header = header.replace('aria-current="page"', 'aria-current="true"')
+    creator = re.search(r'<a class="creator-link".*?</a>', homepage, re.S).group(0)
+    creator = creator.replace('./assets/', '/assets/')
     return f"""<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f7f6">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}">
 <link rel="canonical" href="{canonical}">
 <meta name="robots" content="index,follow">
 <style>
-body{{margin:0;background:#f4f7f6;color:#18222d;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif}}
-.wrap{{max-width:920px;margin:auto;padding:34px 18px 70px}}a{{color:#0c7658}}.crumb{{font-size:12px;color:#71808e;margin-bottom:18px}}
+body{{margin:0;background:radial-gradient(circle at 90% 0%,#e7f3ee 0,transparent 32rem),#f4f7f6;color:#18222d;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif}}
+.wrap{{max-width:720px;margin:auto;padding:24px 18px 40px}}a{{color:#0c7658}}.crumb{{font-size:12px;color:#71808e;margin-bottom:18px}}
 h1{{font-size:clamp(26px,5vw,40px);line-height:1.25;margin:0 0 12px}}.lead{{color:#5f6c75;line-height:1.9}}
-.grid{{display:grid;gap:10px;margin-top:22px}}.card{{background:#fff;border:1px solid #e6eaee;border-radius:14px;padding:14px 16px}}
+.grid{{display:grid;gap:10px;margin-top:22px}}.card{{background:#fff;border:1px solid #e6eaee;border-radius:22px;padding:16px 18px}}
 .name{{font-weight:800;font-size:16px}}.addr{{margin-top:5px;color:#66727b;font-size:13px}}.meta{{margin-top:7px;font-size:12px;color:#87929a}}
 .nav{{margin:22px 0;padding:14px;background:#fff;border:1px solid #e6eaee;border-radius:14px;line-height:2}}
-footer{{margin-top:30px;padding-top:18px;border-top:1px solid #dfe5e3;color:#7d898f;font-size:11px}}
+@media(max-width:520px){{.wrap{{padding:20px 14px 32px}}}}
 </style>
+<link rel="stylesheet" href="/assets/brand.css?v=20261005-brand2">
 </head>
-<body><main class="wrap">
+<body class="gs-tool static-tool">{header}<main class="wrap">
 <div class="crumb">{breadcrumb}</div>
 <h1>{html.escape(h1)}</h1>
 <p class="lead">{intro}</p>
 {body}
-<footer><a href="/">優待QUOナビ トップ</a> ／ DATA UPDATE {today}</footer>
-</main></body></html>"""
+</main><footer class="site-footer"><div class="site-footer-brand">株主優待券店舗とQUOガソリン給油検索</div>
+<div class="footer-links"><a href="/">QUOガソリン給油検索</a><a href="/area/">都道府県一覧</a></div>
+<p>この一覧ページでは現在地を取得しません。店舗の閉店・取扱変更等が反映されていない場合があります。ご利用前に店舗へご確認ください。</p>
+<div class="data-update">DATA UPDATE {today}</div>{creator}</footer></body></html>"""
 
 def generate_static_pages(stations):
     AREA_DIR.mkdir(exist_ok=True)

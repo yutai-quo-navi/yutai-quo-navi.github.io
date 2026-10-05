@@ -1,4 +1,5 @@
 /* Shared identity for the two shareholder benefit search tools. */
+*,*::before,*::after{box-sizing:border-box}
 :root{--brand-accent:#0c7658;--brand-soft:#eaf5f1;--brand-line:#dfe5e3;--brand-muted:#66727b}
 body.food-tool{--brand-accent:#ba480d;--brand-soft:#ffe8bd;--brand-line:#ebdcc6;--brand-muted:#796a59}
 .site-header{width:100%;max-width:720px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top)) 18px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 10px}
@@ -8,7 +9,7 @@ body.food-tool{--brand-accent:#ba480d;--brand-soft:#ffe8bd;--brand-line:#ebdcc6;
 .site-brand-name span{display:inline}
 .tool-nav{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:100%;padding:5px;border:1px solid var(--brand-line);border-radius:17px;background:#ffffffa8}
 .tool-nav a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:8px 6px;border-radius:12px;font-size:13px;font-weight:700;text-decoration:none;color:var(--brand-muted);line-height:1.4}
-.tool-nav a[aria-current="page"]{color:#fff;background:var(--brand-accent);box-shadow:0 3px 10px #36291d12}
+.tool-nav a[aria-current]{color:#fff;background:var(--brand-accent);box-shadow:0 3px 10px #36291d12}
 .tool-nav a:hover{outline:2px solid var(--brand-line);outline-offset:-2px}
 .site-footer{width:100%;max-width:720px;margin:28px auto 0;padding:22px 18px calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--brand-line);color:var(--brand-muted);font-size:11px;line-height:1.8;display:block;text-align:left}
 .site-footer p{margin:8px 0}
