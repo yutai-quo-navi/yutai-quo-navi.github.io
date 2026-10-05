@@ -218,7 +218,7 @@ def generate_static_pages(stations):
         xml.append(f"<url><loc>{html.escape(url)}</loc><lastmod>{today}</lastmod></url>")
     xml.append("</urlset>")
     SITEMAP.write_text("\n".join(xml) + "\n", encoding="utf-8")
-    ROBOTS.write_text(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n", encoding="utf-8")
+    ROBOTS.write_text(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\nSitemap: {BASE}/yutai-map/sitemap.xml\n", encoding="utf-8")
 
 if not KML.exists():
     raise SystemExit("stations.kml がありません。My Mapsから書き出したKMLを stations.kml の名前で置いてください。")

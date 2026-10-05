@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Sitemap: https://yutai-quo-navi.github.io/sitemap.xml
+Sitemap: https://yutai-quo-navi.github.io/yutai-map/sitemap.xml
