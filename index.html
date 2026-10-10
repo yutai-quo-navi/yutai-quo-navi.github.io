@@ -361,10 +361,25 @@ document.getElementById('keyword').addEventListener('keydown',e=>{
   if(e.key==='Enter') keywordSearch();
 });
 
+// Browser-managed coordinates stay in memory and are never persisted here.
+function requestCurrentPosition(geolocation, onSuccess, onError, onRetry = () => {}) {
+  const attempt = (retry) => {
+    geolocation.getCurrentPosition(onSuccess, error => {
+      if (!retry && (error.code === 2 || error.code === 3)) {
+        onRetry();
+        attempt(true);
+      } else {
+        onError(error);
+      }
+    }, {enableHighAccuracy: retry, timeout: 15000, maximumAge: retry ? 0 : 60000});
+  };
+  attempt(false);
+}
+
 btn.onclick=()=>{
   if(!navigator.geolocation){statusEl.textContent='このブラウザは位置情報取得に対応していません。';return}
   btn.disabled=true; statusEl.textContent='現在地を取得しています…'; list.innerHTML='';
-  navigator.geolocation.getCurrentPosition(pos=>{
+  requestCurrentPosition(navigator.geolocation,pos=>{
     const lat=pos.coords.latitude,lng=pos.coords.longitude;
     const nearest=stations.map(s=>({...s,km:distanceKm(lat,lng,s.lat,s.lng)}))
       .sort((a,b)=>a.km-b.km).slice(0,10);
@@ -384,7 +399,7 @@ btn.onclick=()=>{
   },err=>{
     const msg={1:'位置情報の利用が許可されませんでした。ブラウザの設定をご確認ください。',2:'現在地を取得できませんでした。',3:'位置情報の取得がタイムアウトしました。'}[err.code]||'位置情報を取得できませんでした。';
     statusEl.textContent=msg; btn.disabled=false;
-  },{enableHighAccuracy:true,timeout:12000,maximumAge:30000});
+  },()=>{statusEl.textContent='現在地の取得を再試行しています…';});
 };
 </script>
 </body>
