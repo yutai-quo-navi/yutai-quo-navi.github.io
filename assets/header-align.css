@@ -1,4 +1,13 @@
 /* Shared header geometry: keep these rules identical in both search tools. */
+html{scrollbar-gutter:stable}
+@supports not (scrollbar-gutter:stable){html{overflow-y:scroll}}
+body .wrap{
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  padding:24px 18px 32px;
+}
+body .site-footer{max-width:760px}
 body .site-header{
   width:100%;
   max-width:760px;
@@ -33,7 +42,10 @@ body .site-header .site-logo{
   place-items:center;
 }
 body .site-header .site-logo svg{display:block;width:24px;height:24px}
+body .site-header .tool-nav{padding:5px;border:0;gap:8px}
+body .site-header .tool-nav a{min-height:44px;padding:8px 6px;font-size:14px;line-height:1.4}
 @media(max-width:520px){
+  body .wrap{padding:20px 14px 28px}
   body .site-header{padding:calc(16px + env(safe-area-inset-top)) 14px 0;gap:12px 8px}
   body .site-header .site-brand{gap:8px}
   body .site-header .site-brand-name{font-size:12px;line-height:18px}
