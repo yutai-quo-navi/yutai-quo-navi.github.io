@@ -1,0 +1,41 @@
+/* Shared header geometry: keep these rules identical in both search tools. */
+body .site-header{
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  padding:calc(24px + env(safe-area-inset-top)) 18px 0;
+  align-items:center;
+  gap:16px 10px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif;
+}
+body .site-header .site-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:44px;
+  min-width:0;
+}
+body .site-header .site-brand-name{
+  margin:0;
+  font-family:inherit;
+  font-size:14px;
+  line-height:20px;
+  font-weight:800;
+  letter-spacing:.015em;
+}
+body .site-header .site-brand-name span{display:block}
+body .site-header .site-logo{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+}
+body .site-header .site-logo svg{display:block;width:24px;height:24px}
+@media(max-width:520px){
+  body .site-header{padding:calc(16px + env(safe-area-inset-top)) 14px 0;gap:12px 8px}
+  body .site-header .site-brand{gap:8px}
+  body .site-header .site-brand-name{font-size:12px;line-height:18px}
+  body .site-header .site-logo{width:34px;height:34px;flex-basis:34px}
+}
