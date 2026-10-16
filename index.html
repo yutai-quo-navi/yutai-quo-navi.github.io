@@ -4,6 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+<!-- GA4: gas-station homepage; measurement shared with the benefit-search site. -->
+<script>
+(() => {
+  const id = 'G-1KH2LCX7HT';
+  const disabledFlag = `ga-disable-${id}`;
+  let optedOut = false;
+  try { optedOut = localStorage.getItem('yutai-analytics-disabled') === '1'; } catch {}
+  window[disabledFlag] = optedOut || location.hostname !== 'yutai-quo-navi.github.io';
+  if (window[disabledFlag]) return;
+
+  // Match the main site's privacy-safe page_view settings: no query string,
+  // search terms, location coordinates or other user input is sent.
+  const cleanUrl = value => {
+    try { const url = new URL(value); return url.protocol === 'https:' ? url.origin + url.pathname : ''; }
+    catch { return ''; }
+  };
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('consent', 'default', {
+    analytics_storage: 'granted', ad_storage: 'denied',
+    ad_user_data: 'denied', ad_personalization: 'denied'
+  });
+  window.gtag('js', new Date());
+  const page = {
+    page_location: cleanUrl(location.href), page_referrer: cleanUrl(document.referrer),
+    page_title: document.title,
+    allow_google_signals: false, allow_ad_personalization_signals: false
+  };
+  window.gtag('config', id, {...page, send_page_view: false});
+  window.gtag('event', 'page_view', {...page, send_to: id});
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+  document.head.append(script);
+})();
+</script>
 <title>優待QUOナビ｜近くのQUOカード対応ガソリンスタンド・GSを現在地から検索</title>
 <meta name="description" content="ENEOS（エネオス）やJA-SSなど、QUOカード・クオカードで支払いできるガソリンスタンド・GSを現在地から近い順に検索。株主優待でもらったQUOカードの利用先探しにも便利な無料検索ツールです。">
 <link rel="canonical" href="https://yutai-quo-navi.github.io/">
@@ -203,7 +239,7 @@ button:hover{background:var(--green2)} button:active{transform:scale(.99)} butto
       <div class="footer-kicker">PRIVACY</div>
       <div class="privacy-note">
         <strong>運営者は現在地を収集・保存しません。</strong><br>
-      現在地はブラウザ内で最寄りのGSとの距離計算にのみ利用し、検索のために外部APIへ送信しません。位置座標は端末にも永続保存しません。ログイン・X連携はありません。</div>
+      現在地はブラウザ内で最寄りのGSとの距離計算にのみ利用し、検索のために外部APIへ送信しません。位置座標は端末にも永続保存しません。ログイン・X連携はありません。 ページ閲覧数の解析にはGoogle アナリティクスを利用します（現在地の座標・検索語は送信しません）。</div>
       <div class="data-update">DATA UPDATE 2026.10.05</div>
       <a class="general-report" target="_blank" rel="noopener" href="#" onclick="this.href=newStationUrl()">＋ 掲載されていないQUO対応GSを教える</a>
     </div>
